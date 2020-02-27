@@ -1,27 +1,24 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 
-import A from './A';
-import Img from './Img';
-import NavBar from './NavBar';
-import HeaderLink from './HeaderLink';
-import Banner from './banner.jpg';
-import messages from './messages';
+import { Navbar, Nav, Dropdown, DropdownButton } from 'react-bootstrap';
 
 function Header() {
   return (
     <div>
-      <A href="https://www.reactboilerplate.com/">
-        <Img src={Banner} alt="react-boilerplate - Logo" />
-      </A>
-      <NavBar>
-        <HeaderLink to="/">
-          <FormattedMessage {...messages.home} />
-        </HeaderLink>
-        <HeaderLink to="/features">
-          <FormattedMessage {...messages.features} />
-        </HeaderLink>
-      </NavBar>
+      <Navbar bg="dark" variant="dark" expand="lg">
+        <Navbar.Brand href="/">Assets Management</Navbar.Brand>
+        <Nav className="justify-content-end" style={{ flex: '1' }}>
+          <DropdownButton
+            alignRight
+            variant="secondary"
+            title="Test User"
+            id="dropdown-menu-align-right"
+          >
+            <Dropdown.Item eventKey="1">Account Details</Dropdown.Item>
+            <Dropdown.Item eventKey="2">Logout</Dropdown.Item>
+          </DropdownButton>
+        </Nav>
+      </Navbar>
     </div>
   );
 }

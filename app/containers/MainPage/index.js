@@ -4,16 +4,13 @@
  *
  */
 
-import React, { memo } from 'react';
-// import PropTypes from 'prop-types';
+import React, { memo, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 // import { Button } from 'react-bootstrap';
-import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
 // import NavDropdown from 'react-bootstrap/NavDropdown';
 
 // import { Helmet } from 'react-helmet';
@@ -23,9 +20,10 @@ import { compose } from 'redux';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectMainPage from './selectors';
+import makeSelectMainPage, { makeSelectResponse } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
+import { fetchCategories } from './actions';
 // import messages from './messages';
 
 const AppWrapper = styled.div`
@@ -54,7 +52,7 @@ const SideBar = styled.div`
 `;
 
 const MainDiv = styled.div`
-  background: black;
+  background: white;
   -ms-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
@@ -62,32 +60,27 @@ const MainDiv = styled.div`
   box-flex: 1;
 `;
 
-export function MainPage() {
+export function MainPage(props) {
   useInjectReducer({ key: 'mainPage', reducer });
   useInjectSaga({ key: 'mainPage', saga });
 
+  useEffect(() => {
+    console.log('use effect');
+    props.loadCategories();
+  }, []);
+
+  const { response } = props;
+
   return (
     <div>
-      <Navbar bg="dark" variant="dark" expand="lg">
-        <Navbar.Brand href="/">Assets Management</Navbar.Brand>
-        <Nav className="justify-content-end" style={{ flex: '1' }}>
-          <DropdownButton
-            alignRight
-            variant="secondary"
-            title="Test User"
-            id="dropdown-menu-align-right"
-          >
-            <Dropdown.Item eventKey="1">Account Details</Dropdown.Item>
-            <Dropdown.Item eventKey="2">Logout</Dropdown.Item>
-          </DropdownButton>
-        </Nav>
-      </Navbar>
+      {/* {response} */}
+
       <AppWrapper>
         <SideBar>
           <Nav defaultActiveKey="/" className="flex-column">
-            <Nav.Link eventKey="link-1">Home</Nav.Link>
-            <Nav.Link eventKey="link-2">Assets</Nav.Link>
-            <Nav.Link eventKey="link-3">Categories</Nav.Link>
+            <Nav.Link eventKey="/">Home</Nav.Link>
+            <Nav.Link eventKey="/features">Assets</Nav.Link>
+            <Nav.Link eventKey="/categories">categories</Nav.Link>
             <Nav.Link eventKey="link-4">Manufacturers</Nav.Link>
             <Nav.Link eventKey="link-5">Etc</Nav.Link>
             <Nav.Link eventKey="link-6">Etc</Nav.Link>
@@ -95,6 +88,16 @@ export function MainPage() {
         </SideBar>
         <MainDiv>
           content
+          {/* {props.response.list.map(item => (
+            <div key={`item-${item.id}`} item={item}>
+              {item.name}
+            </div>
+          ))} */}
+          <ul>
+            {response &&
+              response.list &&
+              response.list.map(item => <li key={item}>{item.name}</li>)}
+          </ul>
           {/* <Helmet>
         <title>MainPage</title>
         <meta name="description" content="Description of MainPage" />
@@ -107,16 +110,22 @@ export function MainPage() {
 }
 
 MainPage.propTypes = {
+  loadCategories: PropTypes.any,
+  response: PropTypes.object,
   // dispatch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
   mainPage: makeSelectMainPage(),
+  response: makeSelectResponse(),
 });
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
   return {
-    dispatch,
+    loadCategories: response => {
+      console.log('load categories ran');
+      dispatch(fetchCategories(response));
+    },
   };
 }
 

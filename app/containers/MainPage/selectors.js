@@ -21,5 +21,11 @@ const makeSelectMainPage = () =>
     substate => substate,
   );
 
+const makeSelectResponse = () =>
+  createSelector(
+    selectMainPageDomain,
+    substate => substate.response,
+  );
+
 export default makeSelectMainPage;
-export { selectMainPageDomain };
+export { selectMainPageDomain, makeSelectResponse };

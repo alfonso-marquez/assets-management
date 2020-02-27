@@ -16,6 +16,7 @@ import HomePage from 'containers/HomePage/Loadable';
 import FeaturePage from 'containers/FeaturePage/Loadable';
 import MainPage from 'containers/MainPage/Loadable';
 import UserPage from 'containers/UserPage/Loadable';
+import CategoriesPage from 'containers/CategoriesPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
@@ -43,11 +44,12 @@ export default function App() {
     // </AppWrapper>
     // <AppWrapper>
     <div>
-      {/* <Header /> */}
+      <Header />
       <Switch>
         {/* <Route exact path="/" component={HomePage} /> */}
         <Route path="/features" component={FeaturePage} />
         <Route path="/" component={MainPage} />
+        <Route path="/categories" component={CategoriesPage} />
         <Route path="/userpage" component={UserPage} />
         <Route path="" component={NotFoundPage} />
       </Switch>
